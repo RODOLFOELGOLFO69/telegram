@@ -2,8 +2,7 @@ name: Telegram Macro News Bot
 
 on:
   schedule:
-    # Ejecutar cada hora (cron)
-    - cron: '0 * * * *'
+    - cron: '0 * * * *'  # se ejecuta cada hora
   workflow_dispatch:
 
 jobs:
