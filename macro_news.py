@@ -2,36 +2,53 @@ import os
 import requests
 import feedparser
 from datetime import datetime
+import random
 
 # --- CONFIG ---
 CHAT_ID = os.environ.get("CHAT_ID")
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
-# Feeds RSS de noticias económicas y financieras (EEUU y Europa)
+# Feeds reales
 FEEDS = [
-    "https://www.investing.com/rss/economic-calendar.xml",  # calendario económico
-    "https://www.investing.com/rss/crypto-news.xml",       # noticias BTC/crypto
+    "https://www.investing.com/rss/crypto-news.xml",       # BTC y crypto
     "https://www.investing.com/rss/commodities-news.xml",  # oro, petróleo, commodities
-    "https://www.investing.com/rss/market-news.xml"        # mercado general
+    "https://www.investing.com/rss/market-news.xml",       # mercado general
+]
+
+# Palabras clave para filtrar noticias importantes
+KEYWORDS = ["Bitcoin", "BTC", "Oro", "Trump", "Inflación", "PIB", "EEUU", "Europa"]
+
+# Noticias simuladas para pruebas
+SIMULATED_NEWS = [
+    "🔥 Mister Strategy compra 1000 BTC como loco",
+    "💹 Oro alcanza máximo histórico hoy",
+    "📈 Nasdaq sube 3% tras anuncios de política económica",
+    "💰 BTC rompe los 60k dólares, traders sorprendidos",
+    "🌍 Europa publica datos macroeconómicos sorprendentes"
 ]
 
 # --- FUNCIONES ---
 def get_latest_news():
     news_list = []
-    now = datetime.utcnow()
+    # Leer feeds reales
     for feed_url in FEEDS:
         feed = feedparser.parse(feed_url)
         for entry in feed.entries:
-            # Opcional: filtrar solo noticias de hoy (UTC)
-            # published_time = datetime(*entry.published_parsed[:6])
-            # if published_time.date() != now.date():
-            #     continue
-
-            news_list.append({
-                "title": entry.title,
-                "link": entry.link,
-                "published": entry.get("published", now.strftime("%Y-%m-%d %H:%M"))
-            })
+            if any(keyword.lower() in entry.title.lower() for keyword in KEYWORDS):
+                news_list.append({
+                    "title": entry.title,
+                    "link": entry.link,
+                    "published": entry.get("published", datetime.utcnow().strftime("%Y-%m-%d %H:%M"))
+                })
+    # Agregar noticias simuladas para pruebas
+    for sim in SIMULATED_NEWS:
+        news_list.append({
+            "title": sim,
+            "link": "https://t.me",
+            "published": datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+        })
+    # Mezclar las noticias para que parezcan más aleatorias
+    random.shuffle(news_list)
     return news_list
 
 def send_to_telegram(news_list, bot_token, chat_id):
