@@ -34,7 +34,7 @@ def generate_btc_report():
     )
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": "Genera el boletín diario de BTC para hoy con datos recientes y reales."}
