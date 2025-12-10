@@ -1,0 +1,32 @@
+name: BTC Daily Bot
+
+on:
+  schedule:
+    - cron: "45 19 * * *"  # 20:45 España = 19:45 UTC
+  workflow_dispatch:       # Permite ejecutar manualmente
+
+jobs:
+  run_btc_bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai requests
+
+      - name: Run BTC Daily Bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python macro_btc_bot.py
