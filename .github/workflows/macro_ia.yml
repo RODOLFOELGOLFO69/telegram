@@ -2,9 +2,9 @@ name: Macro IA Bot
 
 on:
   schedule:
-    - cron: "*/30 * * * *"     # Cada 30 minutos envía noticias
-    - cron: "15 19 * * *"      # 20:15 hora España (CET) -> 19:15 UTC
-  workflow_dispatch:           # Para ejecutarlo manualmente
+    - cron: "*/30 * * * *"     # Noticias cada 30 minutos
+    - cron: "45 19 * * *"      # Boletín diario BTC a 20:45 CET
+  workflow_dispatch:           # Para ejecutar manualmente
 
 jobs:
   run_bot:
